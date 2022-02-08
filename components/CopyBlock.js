@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const CopyBlock = () => {
   const fillerText = 'What is that?';
@@ -14,10 +14,13 @@ const CopyBlock = () => {
   // const [isCopied, setIsCopied] = useState(false)
   const [isEditing, setIsEditing] = useState(false);
   const [clickTimeout, setClickTimeout] = useState(null);
-  const [text, setText] = useState('');
+  const [text, setText] = useState('Here is some filler text to start');
 
-  const copyTextAction = () => copyTextToClipboard(fillerText);
+  const copyTextAction = () => copyTextToClipboard(text);
   const makeTextEditable = () => setIsEditing(true);
+
+  const ref = useRef();
+  useOnClickOutside(ref, () => setIsEditing(false));
 
   const handleClicks = () => {
     if (clickTimeout !== null) {
@@ -39,15 +42,54 @@ const CopyBlock = () => {
   };
 
   return (
-    <input
-      value={text}
-      role="button"
-      className="rounded border border-slate-300 px-3 py-1 hover:brightness-110"
-      readOnly={!isEditing}
-      onClick={handleClicks}
-      onChange={(event) => setText(event.target.value)}
-    />
+    <>
+      {isEditing ? (
+        <input
+          ref={ref}
+          value={text}
+          role="button"
+          className="w-full rounded-lg border-2 border-transparent px-3 py-1 hover:brightness-110 focus:border-slate-800"
+          // readOnly={!isEditing}
+          // onClick={handleClicks}
+          onChange={(event) => setText(event.target.value)}
+        />
+      ) : (
+        <button
+          onClick={handleClicks}
+          className="rounded-lg border-2 border-transparent bg-white px-3 py-1 hover:brightness-90 active:bg-green-400"
+        >
+          {text}
+        </button>
+      )}
+    </>
   );
 };
+// Borrowed from https://usehooks.com/useOnClickOutside/
+function useOnClickOutside(ref, handler) {
+  useEffect(
+    () => {
+      const listener = (event) => {
+        // Do nothing if clicking ref's element or descendent elements
+        if (!ref.current || ref.current.contains(event.target)) {
+          return;
+        }
+        handler(event);
+      };
+      document.addEventListener('mousedown', listener);
+      document.addEventListener('touchstart', listener);
+      return () => {
+        document.removeEventListener('mousedown', listener);
+        document.removeEventListener('touchstart', listener);
+      };
+    },
+    // Add ref and handler to effect dependencies
+    // It's worth noting that because passed in handler is a new ...
+    // ... function on every render that will cause this effect ...
+    // ... callback/cleanup to run every render. It's not a big deal ...
+    // ... but to optimize you can wrap handler in useCallback before ...
+    // ... passing it into this hook.
+    [ref, handler]
+  );
+}
 
 export default CopyBlock;
