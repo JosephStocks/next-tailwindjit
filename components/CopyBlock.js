@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
 const CopyBlock = () => {
   const fillerText = 'What is that?';
@@ -47,6 +49,7 @@ const CopyBlock = () => {
         <input
           ref={ref}
           value={text}
+          autoFocus
           role="button"
           className="w-full rounded-lg border-2 border-transparent px-3 py-1 hover:brightness-110 focus:border-slate-800"
           // readOnly={!isEditing}
@@ -56,9 +59,12 @@ const CopyBlock = () => {
       ) : (
         <button
           onClick={handleClicks}
-          className="rounded-lg border-2 border-transparent bg-white px-3 py-1 hover:brightness-90 active:bg-green-400"
+          className="relative rounded-lg border-2 border-transparent bg-white px-3 py-1 hover:brightness-90 active:bg-green-400"
         >
           {text}
+          <div className="absolute inset-y-0 right-0 mr-2 flex items-center">
+            <FontAwesomeIcon icon={faCopy} />
+          </div>
         </button>
       )}
     </>
