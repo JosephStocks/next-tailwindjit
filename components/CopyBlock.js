@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CopyBlock = () => {
   const fillerText = 'What is that?';
@@ -36,6 +38,12 @@ const CopyBlock = () => {
         setTimeout(() => {
           copyTextAction();
           console.log('first click executes ');
+          toast.success(
+            <>
+              <bold className="font-bold">Copied!</bold>
+              <div className="line-clamp-3">{text}</div>
+            </>
+          );
           clearTimeout(clickTimeout);
           setClickTimeout(null);
         }, 400)
@@ -51,7 +59,7 @@ const CopyBlock = () => {
           value={text}
           autoFocus
           role="button"
-          className="w-full rounded-lg border-2 border-transparent px-3 py-1 hover:brightness-110 focus:border-slate-800"
+          className="w-full cursor-text rounded-lg border-2 border-transparent px-3 py-1 hover:brightness-110 focus:border-slate-800"
           // readOnly={!isEditing}
           // onClick={handleClicks}
           onChange={(event) => setText(event.target.value)}
@@ -59,7 +67,7 @@ const CopyBlock = () => {
       ) : (
         <button
           onClick={handleClicks}
-          className="relative rounded-lg border-2 border-transparent bg-white px-3 py-1 hover:brightness-90 active:bg-green-400"
+          className="relative rounded-lg border-2 border-transparent bg-white px-3 py-1 pr-10 hover:brightness-90 active:bg-green-400"
         >
           {text}
           <div className="absolute inset-y-0 right-0 mr-2 flex items-center">
@@ -67,6 +75,7 @@ const CopyBlock = () => {
           </div>
         </button>
       )}
+      <ToastContainer hideProgressBar />
     </>
   );
 };
