@@ -1,13 +1,13 @@
-import CopyBlock from '../components/CopyBlock'
+import SetOfCopyBlocks from '../components/SetOfCopyBlocks';
 
 const Container = () => (
   <>
-    <div className="container mx-auto h-screen bg-[#663399] p-4">
+    <div className="bg- container mx-auto h-screen bg-gray-200 p-4">
       <div className="mx-auto w-[600px]">
-        <CopyBlock />
+        <SetOfCopyBlocks />
       </div>
     </div>
   </>
-)
+);
 
-export default Container
+export default Container;
